@@ -13,7 +13,6 @@
       text-align: center;
     }
 
-    /* Background image */
     .bg-image {
       position: fixed;
       top: 0;
@@ -25,18 +24,16 @@
       z-index: -2;
     }
 
-    /* Dark overlay */
     .overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       z-index: -1;
     }
 
-    /* Container */
     .container {
       margin-top: 100px;
       padding: 20px;
@@ -52,13 +49,13 @@
       margin-bottom: 30px;
     }
 
-    /* Card */
     .card {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
       padding: 25px;
       border-radius: 12px;
       max-width: 400px;
       margin: auto;
+      backdrop-filter: blur(8px);
     }
 
     input {
@@ -68,6 +65,7 @@
       border: none;
       margin-bottom: 15px;
       font-size: 16px;
+      outline: none;
     }
 
     button {
@@ -79,29 +77,37 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
+      transition: 0.2s ease;
     }
 
     button:hover {
       background: #17a74a;
+      transform: scale(1.02);
     }
 
     #result {
       margin-top: 20px;
       display: none;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.12);
       padding: 15px;
       border-radius: 8px;
+    }
+
+    .error {
+      color: #ff4d4d;
+    }
+
+    .success {
+      color: #4dff88;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Background -->
   <div class="bg-image"></div>
   <div class="overlay"></div>
 
-  <!-- Content -->
   <div class="container">
     <h1>Certificate Verification</h1>
     <p>Verify internship and training records issued under the NRRSSA E Initiative.</p>
@@ -120,13 +126,21 @@
       const resultDiv = document.getElementById("result");
 
       if (!id) {
-        alert("Enter Certificate ID");
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = "<span class='error'>Please enter Certificate ID</span>";
         return;
       }
 
-      // Dummy success for now
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = "<b>Verification Successful</b><br>Certificate ID: " + id;
+      // Temporary demo logic
+      if (id === "NRRSSA-KALLX-2026-SD-001") {
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML =
+          "<span class='success'><b>Verification Successful</b></span><br>Name: Sameer Khichindia<br>Email: theoclayt@gmail.com";
+      } else {
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML =
+          "<span class='error'>Certificate not found</span>";
+      }
     }
   </script>
 
