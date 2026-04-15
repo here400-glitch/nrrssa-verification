@@ -3,151 +3,227 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Certificate Verification | NRRSSA-E</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #0b0f14;
-        color: #ffffff;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa') no-repeat center center/cover;
+    position: relative;
+    color: #111;
+}
 
-    .container {
-        max-width: 800px;
-        margin: 100px auto;
-        text-align: center;
-        padding: 20px;
-    }
+/* Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.75);
+    z-index: -1;
+}
 
-    h1 {
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
+.container {
+    max-width: 600px;
+    margin: 80px auto;
+    text-align: center;
+    padding: 20px;
+}
 
-    p {
-        color: #9ca3af;
-        margin-bottom: 40px;
-    }
+h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
 
-    .box {
-        background: #111827;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    }
+p {
+    color: #444;
+    margin-bottom: 30px;
+}
 
-    input {
-        width: 100%;
-        padding: 12px;
-        border-radius: 6px;
-        border: none;
-        margin-bottom: 15px;
-        font-size: 14px;
-        outline: none;
-    }
+.box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
 
-    button {
-        width: 100%;
-        padding: 12px;
-        background: #10b981;
-        border: none;
-        border-radius: 6px;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-    }
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
 
-    button:hover {
-        background: #059669;
-    }
+button {
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-    .result {
-        margin-top: 20px;
-        text-align: left;
-        font-size: 14px;
-        line-height: 1.6;
-    }
+button:hover {
+    background: #333;
+}
 
-    .verified {
-        color: #10b981;
-    }
+.note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+}
 
-    .invalid {
-        color: #ef4444;
-    }
+.result {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 14px;
+}
 
-    .header {
-        position: absolute;
-        top: 20px;
-        left: 40px;
-        font-weight: bold;
-        color: #10b981;
-    }
+.verified {
+    color: green;
+}
 
-    .nav {
-        position: absolute;
-        top: 20px;
-        right: 40px;
-        font-size: 14px;
-    }
+.invalid {
+    color: red;
+}
 
-    .nav a {
-        color: #9ca3af;
-        text-decoration: none;
-        margin-left: 15px;
-    }
-
-    .nav a:hover {
-        color: white;
-    }
+footer {
+    margin-top: 40px;
+    font-size: 12px;
+    color: #555;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">NRRSSA-E</div>
-
-<div class="nav">
-    <a href="#">Home</a>
-    <a href="#">Verify Certificate</a>
-</div>
-
 <div class="container">
-    <h1>Certificate Verification</h1>
-    <p>Verify internship and training records issued under the NRRSSA-E Initiative.</p>
 
-    <div class="box">
-        <input type="text" id="certId" placeholder="e.g., NRRSSA-KAL-LX-2026-SD-001">
-        <button onclick="verifyCert()">Verify Certificate</button>
+<h1>Certificate Verification | NRRSSA-E</h1>
+<p>Verify internship and training records issued under the NRRSSA-E initiative.</p>
 
-        <div id="result" class="result"></div>
+<div class="box">
+
+<!-- Step 1 -->
+<input type="text" id="certId" placeholder="NRRSSA-KALLX-XXXX-XX-XXX">
+<button onclick="showForm()">Verify</button>
+
+<!-- Step 2 -->
+<div id="formSection" style="display:none; margin-top:20px;">
+    <input type="text" id="name" placeholder="Full Name *" required>
+    <input type="email" id="email" placeholder="Email Address *" required>
+    <input type="text" id="org" placeholder="Organization / Company">
+    <input type="text" id="purpose" placeholder="Purpose of Verification">
+    <input type="text" id="location" placeholder="Location">
+
+    <button onclick="verifyCert()">Proceed to Verification</button>
+
+    <div class="note">
+        The information provided will be used only for verification tracking and will not be shared externally.
     </div>
 </div>
 
-<script>
-function verifyCert() {
-    let input = document.getElementById("certId").value.trim();
-    let result = document.getElementById("result");
+<!-- Step 3 -->
+<div id="result" class="result"></div>
 
-    if (input === "NRRSSA-KAL-LX-2026-SD-001") {
-        result.innerHTML = `
-        <div class="verified">
-        <strong>✔ Verified</strong><br><br>
-        Name: Avany Abhilasha<br>
-        Role: Structural Engineer<br>
-        Program: Internship Training<br>
-        Duration: Nov 25, 2025 – April 13, 2026<br>
-        Issued by: NRRSSA-E Initiative
-        </div>
-        `;
-    } else {
-        result.innerHTML = `
-        <div class="invalid">
-        ✖ Invalid Certificate ID<br><br>
-        Please check the ID and try again.
-        </div>
-        `;
+</div>
+
+<footer>
+This record is maintained by the NRRSSA-E initiative for verification purposes.
+</footer>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let currentCertId = "";
+
+function showForm() {
+    const certId = document.getElementById("certId").value.trim();
+
+    if (!certId) {
+        alert("Enter Certificate ID");
+        return;
+    }
+
+    currentCertId = certId;
+    document.getElementById("formSection").style.display = "block";
+}
+
+async function verifyCert() {
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+
+    if (!name || !email) {
+        alert("Name and Email are required");
+        return;
+    }
+
+    let org = document.getElementById("org").value;
+    let purpose = document.getElementById("purpose").value;
+    let location = document.getElementById("location").value;
+
+    let resultDiv = document.getElementById("result");
+
+    try {
+
+        /* Store verification request */
+        await db.collection("verification_requests").add({
+            certificate_id: currentCertId,
+            requester_name: name,
+            requester_email: email,
+            organization: org,
+            purpose: purpose,
+            location: location,
+            timestamp: new Date()
+        });
+
+        /* Check certificate */
+        const doc = await db.collection("Certificates").doc(currentCertId).get();
+
+        if (doc.exists) {
+
+            const data = doc.data();
+
+            resultDiv.innerHTML = `
+            <div class="verified">
+            <strong>Verification Status: Verified</strong><br><br>
+            Name: ${data.name}<br>
+            Certificate ID: ${currentCertId}<br>
+            Division: ${data.division}<br>
+            Program: ${data.program}<br>
+            Duration: ${data.duration}<br>
+            Issued under: NRRSSA-E Initiative
+            </div>`;
+
+        } else {
+
+            resultDiv.innerHTML = `
+            <div class="invalid">
+            No record found for this Certificate ID.<br>
+            Please check the ID or contact: your@email.com
+            </div>`;
+        }
+
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="invalid">Error processing request</div>`;
     }
 }
 </script>
