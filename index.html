@@ -3,98 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Certificate Verification | NRRSSA-E</title>
+<title>Certificate Verification | NRRSSA - E</title>
 
 <style>
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa') no-repeat center center/cover;
-    position: relative;
-    color: #111;
-}
-
-/* Overlay */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(255,255,255,0.75);
-    z-index: -1;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .container {
-    max-width: 600px;
-    margin: 80px auto;
-    text-align: center;
-    padding: 20px;
+  background: white;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 10px;
+  text-align: center;
 }
 
 h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
-p {
-    color: #444;
-    margin-bottom: 30px;
-}
-
-.box {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+input, button, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    background: #111;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+  background: black;
+  color: white;
+  cursor: pointer;
 }
 
 button:hover {
-    background: #333;
+  background: #333;
 }
 
-.note {
-    font-size: 12px;
-    color: #666;
-    margin-top: 10px;
+#formSection {
+  display: none;
 }
 
-.result {
-    margin-top: 20px;
-    text-align: left;
-    font-size: 14px;
-}
-
-.verified {
-    color: green;
-}
-
-.invalid {
-    color: red;
-}
-
-footer {
-    margin-top: 40px;
-    font-size: 12px;
-    color: #555;
+#result {
+  margin-top: 20px;
+  text-align: left;
 }
 </style>
 </head>
@@ -102,201 +61,102 @@ footer {
 <body>
 
 <div class="container">
+  <h1>Certificate Verification</h1>
+  <p>Verify internship and training records issued under the NRRSSA - E initiative.</p>
 
-<h1>Certificate Verification | NRRSSA-E</h1>
-<p>Verify internship and training records issued under the NRRSSA-E initiative.</p>
+  <input type="text" id="certificateId" placeholder="NRRSSA - KALLX - XXXX - XX - XXX">
+  <button onclick="startVerification()">Verify</button>
 
-<div class="box">
+  <div id="formSection">
+    <h3>Verification Details</h3>
 
-<!-- Step 1 -->
-<input type="text" id="certId" placeholder="NRRSSA-KALLX-XXXX-XX-XXX">
-<button onclick="showForm()">Verify</button>
-
-<!-- Step 2 -->
-<div id="formSection" style="display:none; margin-top:20px;">
-    <input type="text" id="name" placeholder="Full Name *" required>
-    <input type="email" id="email" placeholder="Email Address *" required>
-    <input type="text" id="org" placeholder="Organization / Company">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="text" id="organization" placeholder="Organization / Company">
     <input type="text" id="purpose" placeholder="Purpose of Verification">
     <input type="text" id="location" placeholder="Location">
 
-    <button onclick="verifyCert()">Proceed to Verification</button>
+    <button onclick="verifyCertificate()">Proceed to Verification</button>
 
-    <div class="note">
-        The information provided will be used only for verification tracking and will not be shared externally.
-    </div>
+    <p style="font-size: 12px; margin-top: 10px;">
+      The information provided will be used only for verification tracking and will not be shared externally.
+    </p>
+  </div>
+
+  <div id="result"></div>
 </div>
-
-<!-- Step 3 -->
-<div id="result" class="result"></div>
-
-</div>
-
-<footer>
-This record is maintained by the NRRSSA-E initiative for verification purposes.
-</footer>
-
-</div>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID"
-};
+let enteredId = "";
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let currentCertId = "";
-
-function showForm() {
-    const certId = document.getElementById("certId").value.trim();
-
-    if (!certId) {
-        alert("Enter Certificate ID");
-        return;
-    }
-
-    currentCertId = certId;
-    document.getElementById("formSection").style.display = "block";
+function startVerification() {
+  enteredId = document.getElementById("certificateId").value.trim();
+  if (!enteredId) {
+    alert("Please enter Certificate ID");
+    return;
+  }
+  document.getElementById("formSection").style.display = "block";
 }
 
-async function verifyCert() {
+async function verifyCertificate() {
+  const docRef = window.db.collection("Certificates").doc(enteredId);
+  const docSnap = await docRef.get();
 
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
+  const resultDiv = document.getElementById("result");
 
-    if (!name || !email) {
-        alert("Name and Email are required");
-        return;
-    }
+  if (docSnap.exists) {
+    const data = docSnap.data();
 
-    let org = document.getElementById("org").value;
-    let purpose = document.getElementById("purpose").value;
-    let location = document.getElementById("location").value;
-
-    let resultDiv = document.getElementById("result");
-
-    try {
-
-        /* Store verification request */
-        await db.collection("verification_requests").add({
-            certificate_id: currentCertId,
-            requester_name: name,
-            requester_email: email,
-            organization: org,
-            purpose: purpose,
-            location: location,
-            timestamp: new Date()
-        });
-
-        /* Check certificate */
-        const doc = await db.collection("Certificates").doc(currentCertId).get();
-
-        if (doc.exists) {
-
-            const data = doc.data();
-
-            resultDiv.innerHTML = `
-            <div class="verified">
-            <strong>Verification Status: Verified</strong><br><br>
-            Name: ${data.name}<br>
-            Certificate ID: ${currentCertId}<br>
-            Division: ${data.division}<br>
-            Program: ${data.program}<br>
-            Duration: ${data.duration}<br>
-            Issued under: NRRSSA-E Initiative
-            </div>`;
-
-        } else {
-
-            resultDiv.innerHTML = `
-            <div class="invalid">
-            No record found for this Certificate ID.<br>
-            Please check the ID or contact: your@email.com
-            </div>`;
-        }
-
-    } catch (error) {
-        resultDiv.innerHTML = `<div class="invalid">Error processing request</div>`;
-    }
+    resultDiv.innerHTML = `
+      <h3>Verification Status: Verified</h3>
+      <p><strong>Name:</strong> ${data.name}</p>
+      <p><strong>Certificate ID:</strong> ${enteredId}</p>
+      <p><strong>Division:</strong> ${data.division}</p>
+      <p><strong>Program:</strong> ${data.program}</p>
+      <p><strong>Duration:</strong> ${data.duration}</p>
+      <p><strong>Issued under:</strong> NRRSSA - E Initiative</p>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <p>No record found for this Certificate ID.<br>
+      Please check the ID or contact: your@email.com</p>
+    `;
+  }
 }
 </script>
-<script type="module">
-// Firebase imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 🔴 PASTE YOUR FIREBASE CONFIG HERE
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.6/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.6/firebase-firestore.js";
+
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
+  apiKey: "AIzaSyD879czIS39p0E5507iA7ZpKKgv3b0rCQ",
+  authDomain: "nrrssa-e.firebaseapp.com",
+  projectId: "nrrssa-e",
+  storageBucket: "nrrssa-e.appspot.com",
+  messagingSenderId: "617591889409",
+  appId: "1:617591889409:web:35ab15426c4fbd94a3ea00"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔍 Verify function
-window.verifyCertificate = async function () {
-  const certId = document.getElementById("certificateId").value.trim();
-
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const org = document.getElementById("organization").value.trim();
-  const purpose = document.getElementById("purpose").value.trim();
-  const location = document.getElementById("location").value.trim();
-
-  if (!certId || !name || !email) {
-    alert("Please fill required fields");
-    return;
-  }
-
-  const resultDiv = document.getElementById("result");
-
-  try {
-    const docRef = doc(db, "Certificates", certId);
-    const docSnap = await getDoc(docRef);
-
-    // Save verification request
-    await addDoc(collection(db, "VerificationRequests"), {
-      certificate_id: certId,
-      requester_name: name,
-      requester_email: email,
-      organization: org,
-      purpose: purpose,
-      location: location,
-      timestamp: serverTimestamp()
-    });
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-
-      resultDiv.innerHTML = `
-        <h3>Verification Status: Verified</h3>
-        <p><b>Name:</b> ${data.name}</p>
-        <p><b>Certificate ID:</b> ${certId}</p>
-        <p><b>Division:</b> ${data.division}</p>
-        <p><b>Program:</b> ${data.program}</p>
-        <p><b>Duration:</b> ${data.duration}</p>
-        <p><b>Issued under:</b> NRRSSA - E Initiative</p>
-      `;
-    } else {
-      resultDiv.innerHTML = `
-        <h3>No record found</h3>
-        <p>Please check the Certificate ID or contact: director-kallx@nrrssa.org</p>
-      `;
-    }
-  } catch (error) {
-    console.error(error);
-    alert("Error verifying certificate");
-  }
+window.db = {
+  collection: (name) => ({
+    doc: (id) => ({
+      get: async () => {
+        const ref = doc(db, name, id);
+        const snap = await getDoc(ref);
+        return {
+          exists: snap.exists(),
+          data: () => snap.data()
+        };
+      }
+    })
+  })
 };
-          </script>
+</script>
+
 </body>
 </html>
