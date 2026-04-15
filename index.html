@@ -227,6 +227,76 @@ async function verifyCert() {
     }
 }
 </script>
+<script type="module">
+// Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// 🔴 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 🔍 Verify function
+window.verifyCertificate = async function () {
+  const certId = document.getElementById("certificateId").value.trim();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const org = document.getElementById("organization").value.trim();
+  const purpose = document.getElementById("purpose").value.trim();
+  const location = document.getElementById("location").value.trim();
+
+  if (!certId || !name || !email) {
+    alert("Please fill required fields");
+    return;
+  }
+
+  const resultDiv = document.getElementById("result");
+
+  try {
+    const docRef = doc(db, "Certificates", certId);
+    const docSnap = await getDoc(docRef);
+
+    // Save verification request
+    await addDoc(collection(db, "VerificationRequests"), {
+      certificate_id: certId,
+      requester_name: name,
+      requester_email: email,
+      organization: org,
+      purpose: purpose,
+      location: location,
+      timestamp: serverTimestamp()
+    });
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+
+      resultDiv.innerHTML = `
+        <h3>Verification Status: Verified</h3>
+        <p><b>Name:</b> ${data.name}</p>
+        <p><b>Certificate ID:</b> ${certId}</p>
+        <p><b>Division:</b> ${data.division}</p>
+        <p><b>Program:</b> ${data.program}</p>
+        <p><b>Duration:</b> ${data.duration}</p>
+        <p><b>Issued under:</b> NRRSSA - E Initiative</p>
+      `;
+    } else {
+      resultDiv.innerHTML = `
+        <h3>No record found</h3>
+        <p>Please check the Certificate ID or contact: director-kallx@nrrssa.org</p>
+      `;
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error verifying certificate");
+  }
+};
+          </script>
 </body>
 </html>
