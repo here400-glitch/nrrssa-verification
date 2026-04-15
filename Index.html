@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Certificate Verification | NRRSSA-E</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0f17;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #a0a8b8;
+      margin-bottom: 30px;
+    }
+
+    .box {
+      background: #111827;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 15px;
+      background: #1f2937;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #10b981;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #059669;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 15px;
+      text-align: left;
+    }
+
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-weight: bold;
+      color: #10b981;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">NRRSSA-E</div>
+
+<div class="container">
+  <h1>Certificate Verification</h1>
+  <p>Verify internship and training records issued under the NRRSSA-E initiative.</p>
+
+  <div class="box">
+    <input type="text" id="certID" placeholder="e.g. NRRSSA-KAL-LX-2026-SD-001">
+    <button onclick="verify()">Verify Certificate</button>
+
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+function verify() {
+  var input = document.getElementById("certID").value.trim();
+
+  if (input === "NRRSSA-KAL-LX-2026-SD-001") {
+    document.getElementById("result").innerHTML =
+    "<b>Status:</b> Verified<br><br>" +
+    "<b>Name:</b> Avany Abhilash<br>" +
+    "<b>Division:</b> Structural Division<br>" +
+    "<b>Certificate ID:</b> NRRSSA-KAL-LX-2026-SD-001<br>" +
+    "<b>Issued Under:</b> NRRSSA-E Initiative";
+  } else {
+    document.getElementById("result").innerHTML =
+    "<span style='color:red;'>Invalid Certificate ID</span>";
+  }
+}
+</script>
+
+</body>
+    </html>
