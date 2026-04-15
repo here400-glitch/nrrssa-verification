@@ -4,6 +4,9 @@
   <title>NRRSSA-E Verification</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- QR Scanner -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
   <style>
     body {
       margin: 0;
@@ -12,7 +15,6 @@
       color: white;
     }
 
-    /* Background */
     .bg {
       position: fixed;
       width: 100%;
@@ -30,7 +32,6 @@
       z-index: -1;
     }
 
-    /* Navbar */
     .nav {
       display: flex;
       justify-content: space-between;
@@ -43,30 +44,21 @@
       font-weight: bold;
     }
 
-    .nav-links {
-      opacity: 0.8;
-    }
-
-    /* Hero Section */
     .hero {
       text-align: center;
       margin-top: 80px;
-      padding: 20px;
     }
 
     .hero h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
+      font-size: 38px;
     }
 
     .hero p {
       color: #aaa;
-      font-size: 14px;
       max-width: 500px;
       margin: auto;
     }
 
-    /* Card */
     .card {
       margin: 60px auto;
       max-width: 500px;
@@ -74,60 +66,36 @@
       border-radius: 16px;
       padding: 30px;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .label {
-      text-align: left;
-      font-size: 12px;
-      color: #aaa;
-      margin-bottom: 8px;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 8px;
       border: none;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      font-size: 16px;
-      margin-bottom: 20px;
-      outline: none;
-    }
-
-    input::placeholder {
-      color: #777;
+      margin-bottom: 12px;
     }
 
     button {
       width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
+      padding: 12px;
       background: #1db954;
+      border: none;
       color: white;
-      font-size: 16px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.2s;
     }
 
-    button:hover {
-      background: #17a74a;
-      transform: scale(1.02);
+    #reader {
+      margin-top: 15px;
+    }
+
+    #details {
+      display: none;
     }
 
     #result {
       margin-top: 20px;
-      display: none;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 11px;
-      color: #777;
-      margin-top: 40px;
-      padding-bottom: 20px;
     }
   </style>
 </head>
@@ -137,52 +105,103 @@
 <div class="bg"></div>
 <div class="overlay"></div>
 
-<!-- Navbar -->
 <div class="nav">
   <div class="logo">NRRSSA-E</div>
-  <div class="nav-links">Home &nbsp;&nbsp; Verify Certificate</div>
+  <div>Home &nbsp; Verify</div>
 </div>
 
-<!-- Hero -->
 <div class="hero">
   <h1>Internship and Certificate Verification</h1>
-  <h3 style="color:#00ffae; margin-top:5px;">NRRSSA-E</h3>
-  <p>
-    Verify internship and training records issued under the Next Reusable Single Stage Rocket Advancements initiative.
-  </p>
+  <p>Verify records issued under NRRSSA-E initiative</p>
 </div>
 
-<!-- Card -->
 <div class="card">
 
-  <div class="label">ENTER CERTIFICATE ID</div>
+  <input id="certId" placeholder="NRRSSA-XXXX-XXXX-XXX-XXX">
 
-  <input type="text" id="certId" placeholder="NRRSSA-KALLX-XXXX-XX-XXX">
+  <button onclick="verify()">Verify Record</button>
+  <button onclick="startQR()">Scan QR</button>
 
-  <button onclick="verify()">Verify Record →</button>
+  <div id="reader"></div>
+
+  <!-- DETAILS FORM -->
+  <div id="details">
+    <input id="name" placeholder="Your Name">
+    <input id="email" placeholder="Email">
+    <input id="org" placeholder="Organization">
+    <input id="purpose" placeholder="Purpose">
+    <input id="location" placeholder="Location">
+
+    <button onclick="submitDetails()">Submit Verification</button>
+  </div>
 
   <div id="result"></div>
 
 </div>
 
-<div class="footer">
-  THIS RECORD IS MAINTAINED BY THE NRRSSA-E INITIATIVE FOR VERIFICATION PURPOSES.
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
 
-<script>
-function verify() {
+const firebaseConfig = {
+  apiKey: "AIzaSyDb879CZS3gp0E5507ia7ZPKKgv3b0rCQ",
+  authDomain: "nrrssa-e.firebaseapp.com",
+  projectId: "nrrssa-e",
+  storageBucket: "nrrssa-e.appspot.com",
+  messagingSenderId: "617591898409",
+  appId: "1:617591898409:web:35ab15426c4fbd94a3ea00"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.verify = async function() {
   const id = document.getElementById("certId").value.trim();
   const result = document.getElementById("result");
 
   if (!id) {
-    result.style.display = "block";
     result.innerHTML = "Enter Certificate ID";
     return;
   }
 
-  result.style.display = "block";
-  result.innerHTML = "Verification in progress...";
-}
+  const snap = await getDoc(doc(db, "Certificates", id));
+
+  if (snap.exists()) {
+    result.innerHTML = "Certificate Found";
+    document.getElementById("details").style.display = "block";
+  } else {
+    result.innerHTML = "Invalid Certificate";
+  }
+};
+
+window.submitDetails = async function() {
+  const data = {
+    certId: document.getElementById("certId").value,
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    org: document.getElementById("org").value,
+    purpose: document.getElementById("purpose").value,
+    location: document.getElementById("location").value,
+    time: new Date().toISOString()
+  };
+
+  await addDoc(collection(db, "Verifications"), data);
+
+  document.getElementById("result").innerHTML =
+    "Verification Completed and Logged";
+};
+
+window.startQR = function() {
+  const qr = new Html5Qrcode("reader");
+  qr.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    (decodedText) => {
+      document.getElementById("certId").value = decodedText;
+      qr.stop();
+    }
+  );
+};
 </script>
 
 </body>
