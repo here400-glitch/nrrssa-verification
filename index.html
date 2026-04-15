@@ -1,31 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>NRRSSA-E Verification</title>
-</head>
-<body style="font-family: Arial; text-align: center; margin-top: 50px;">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate Verification | NRRSSA-E</title>
 
-  <h2>Certificate Verification</h2>
-
-  <input id="certId" placeholder="Enter Certificate ID" style="padding:10px; width:250px;">
-  <br><br>
-  <button onclick="verify()" style="padding:10px 20px;">Verify</button>
-
-  <p id="result" style="margin-top:20px; font-weight:bold;"></p>
-
-  <script>
-    function verify() {
-      const input = document.getElementById("certId").value;
-
-      if(input === "NRRSSA-KAL-LX-2026-SD-001") {
-        document.getElementById("result").innerHTML =
-          "Verified<br>Name: Avany Abhilash<br>Division: Structural Division<br>Program: Point Five-1 Prototype Program<br>Duration: Dec 18, 2025 - Apr 13, 2026";
-      } else {
-        document.getElementById("result").innerHTML =
-          "No record found";
-      }
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0b0f14;
+        color: #ffffff;
     }
-  </script>
+
+    .container {
+        max-width: 800px;
+        margin: 100px auto;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #9ca3af;
+        margin-bottom: 40px;
+    }
+
+    .box {
+        background: #111827;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        border: none;
+        margin-bottom: 15px;
+        font-size: 14px;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #10b981;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #059669;
+    }
+
+    .result {
+        margin-top: 20px;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .verified {
+        color: #10b981;
+    }
+
+    .invalid {
+        color: #ef4444;
+    }
+
+    .header {
+        position: absolute;
+        top: 20px;
+        left: 40px;
+        font-weight: bold;
+        color: #10b981;
+    }
+
+    .nav {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        font-size: 14px;
+    }
+
+    .nav a {
+        color: #9ca3af;
+        text-decoration: none;
+        margin-left: 15px;
+    }
+
+    .nav a:hover {
+        color: white;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">NRRSSA-E</div>
+
+<div class="nav">
+    <a href="#">Home</a>
+    <a href="#">Verify Certificate</a>
+</div>
+
+<div class="container">
+    <h1>Certificate Verification</h1>
+    <p>Verify internship and training records issued under the NRRSSA-E Initiative.</p>
+
+    <div class="box">
+        <input type="text" id="certId" placeholder="e.g., NRRSSA-KAL-LX-2026-SD-001">
+        <button onclick="verifyCert()">Verify Certificate</button>
+
+        <div id="result" class="result"></div>
+    </div>
+</div>
+
+<script>
+function verifyCert() {
+    let input = document.getElementById("certId").value.trim();
+    let result = document.getElementById("result");
+
+    if (input === "NRRSSA-KAL-LX-2026-SD-001") {
+        result.innerHTML = `
+        <div class="verified">
+        <strong>✔ Verified</strong><br><br>
+        Name: Avany Abhilasha<br>
+        Role: Structural Engineer<br>
+        Program: Internship Training<br>
+        Duration: Nov 25, 2025 – April 13, 2026<br>
+        Issued by: NRRSSA-E Initiative
+        </div>
+        `;
+    } else {
+        result.innerHTML = `
+        <div class="invalid">
+        ✖ Invalid Certificate ID<br><br>
+        Please check the ID and try again.
+        </div>
+        `;
+    }
+}
+</script>
 
 </body>
 </html>
