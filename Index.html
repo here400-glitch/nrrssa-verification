@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Certificate Verification</title>
+  <title>NRRSSA-E Verification</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -10,74 +10,106 @@
       font-family: Arial, sans-serif;
       background: #000;
       color: white;
-      text-align: center;
     }
 
-    .bg-image {
+    /* Background */
+    .bg {
       position: fixed;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      background: url('bg.png') center/cover no-repeat;
+      background: url('./bg.png') center/cover no-repeat;
       opacity: 0.75;
       z-index: -2;
     }
 
     .overlay {
       position: fixed;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(0,0,0,0.7);
       z-index: -1;
     }
 
-    .container {
-      margin-top: 100px;
+    /* Navbar */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      font-size: 14px;
+    }
+
+    .logo {
+      color: #00ffae;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      opacity: 0.8;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-top: 80px;
       padding: 20px;
     }
 
-    h1 {
-      font-size: 36px;
+    .hero h1 {
+      font-size: 42px;
       margin-bottom: 10px;
     }
 
-    p {
-      color: #ccc;
-      margin-bottom: 30px;
+    .hero p {
+      color: #aaa;
+      font-size: 14px;
+      max-width: 500px;
+      margin: auto;
     }
 
+    /* Card */
     .card {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 25px;
-      border-radius: 12px;
-      max-width: 400px;
-      margin: auto;
-      backdrop-filter: blur(8px);
+      margin: 60px auto;
+      max-width: 500px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .label {
+      text-align: left;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 8px;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 14px;
+      border-radius: 10px;
       border: none;
-      margin-bottom: 15px;
+      background: rgba(0,0,0,0.6);
+      color: white;
       font-size: 16px;
+      margin-bottom: 20px;
       outline: none;
+    }
+
+    input::placeholder {
+      color: #777;
     }
 
     button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
       background: #1db954;
       color: white;
-      border: none;
-      border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition: 0.2s;
     }
 
     button:hover {
@@ -88,61 +120,70 @@
     #result {
       margin-top: 20px;
       display: none;
-      background: rgba(255,255,255,0.12);
-      padding: 15px;
-      border-radius: 8px;
     }
 
-    .error {
-      color: #ff4d4d;
-    }
-
-    .success {
-      color: #4dff88;
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #777;
+      margin-top: 40px;
+      padding-bottom: 20px;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="bg-image"></div>
-  <div class="overlay"></div>
+<div class="bg"></div>
+<div class="overlay"></div>
 
-  <div class="container">
-    <h1>Certificate Verification</h1>
-    <p>Verify internship and training records issued under the NRRSSA E Initiative.</p>
+<!-- Navbar -->
+<div class="nav">
+  <div class="logo">NRRSSA-E</div>
+  <div class="nav-links">Home &nbsp;&nbsp; Verify Certificate</div>
+</div>
 
-    <div class="card">
-      <input type="text" id="certId" placeholder="NRRSSA-XXXX-XXXX-XXX-XXX">
-      <button onclick="verify()">Verify Certificate</button>
+<!-- Hero -->
+<div class="hero">
+  <h1>Internship and Certificate Verification</h1>
+  <h3 style="color:#00ffae; margin-top:5px;">NRRSSA-E</h3>
+  <p>
+    Verify internship and training records issued under the Next Reusable Single Stage Rocket Advancements initiative.
+  </p>
+</div>
 
-      <div id="result"></div>
-    </div>
-  </div>
+<!-- Card -->
+<div class="card">
 
-  <script>
-    function verify() {
-      const id = document.getElementById("certId").value.trim();
-      const resultDiv = document.getElementById("result");
+  <div class="label">ENTER CERTIFICATE ID</div>
 
-      if (!id) {
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML = "<span class='error'>Please enter Certificate ID</span>";
-        return;
-      }
+  <input type="text" id="certId" placeholder="NRRSSA-KALLX-XXXX-XX-XXX">
 
-      // Temporary demo logic
-      if (id === "NRRSSA-KALLX-2026-SD-001") {
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML =
-          "<span class='success'><b>Verification Successful</b></span><br>Name: Sameer Khichindia<br>Email: theoclayt@gmail.com";
-      } else {
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML =
-          "<span class='error'>Certificate not found</span>";
-      }
-    }
-  </script>
+  <button onclick="verify()">Verify Record →</button>
+
+  <div id="result"></div>
+
+</div>
+
+<div class="footer">
+  THIS RECORD IS MAINTAINED BY THE NRRSSA-E INITIATIVE FOR VERIFICATION PURPOSES.
+</div>
+
+<script>
+function verify() {
+  const id = document.getElementById("certId").value.trim();
+  const result = document.getElementById("result");
+
+  if (!id) {
+    result.style.display = "block";
+    result.innerHTML = "Enter Certificate ID";
+    return;
+  }
+
+  result.style.display = "block";
+  result.innerHTML = "Verification in progress...";
+}
+</script>
 
 </body>
 </html>
