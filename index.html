@@ -1,3 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Certificate Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
+    input, button {
+      width: 90%;
+      max-width: 400px;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    button {
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Certificate Verification</h1>
+
+<input type="text" id="certId" placeholder="Enter Certificate ID">
+<br>
+<button onclick="verify()">Verify</button>
+
+<div id="result" class="box" style="display:none;"></div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
@@ -16,45 +68,36 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.verify = async function () {
-  try {
-    const id = document.getElementById("certId").value.trim();
+  const id = document.getElementById("certId").value.trim();
 
-    if (!id) {
-      alert("Enter Certificate ID");
-      return;
-    }
+  if (!id) {
+    alert("Enter Certificate ID");
+    return;
+  }
 
-    console.log("Searching ID:", id);
+  const docRef = doc(db, "Certificates", id);
+  const docSnap = await getDoc(docRef);
 
-    const docRef = doc(db, "Certificates", id);
-    const docSnap = await getDoc(docRef);
+  const resultDiv = document.getElementById("result");
 
-    console.log("Firestore response:", docSnap);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
 
-    const resultDiv = document.getElementById("result");
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      console.log("Data:", data);
-
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = `
-        <h3>Verification Successful</h3>
-        <p><b>Name:</b> ${data.name}</p>
-        <p><b>Division:</b> ${data.division}</p>
-        <p><b>Program:</b> ${data.program}</p>
-        <p><b>Duration:</b> ${data.duration}</p>
-      `;
-    } else {
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = `<p>Certificate not found</p>`;
-    }
-
-  } catch (error) {
-    console.error("ERROR:", error);
-    document.getElementById("result").innerHTML =
-      "<p style='color:red;'>Error verifying certificate.</p>";
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = `
+      <h3>Verification Successful</h3>
+      <p><b>Name:</b> ${data.name}</p>
+      <p><b>Division:</b> ${data.division}</p>
+      <p><b>Program:</b> ${data.program}</p>
+      <p><b>Duration:</b> ${data.duration}</p>
+    `;
+  } else {
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = `<p>Certificate not found</p>`;
   }
 };
 
 </script>
+
+</body>
+</html>
