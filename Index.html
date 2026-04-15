@@ -1,114 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Certificate Verification | NRRSSA-E</title>
+  <title>Certificate Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0b0f17;
-      color: #ffffff;
+      background: #000;
+      color: white;
       text-align: center;
     }
 
+    /* Background image */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('bg.png') center/cover no-repeat;
+      opacity: 0.75;
+      z-index: -2;
+    }
+
+    /* Dark overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    /* Container */
     .container {
-      max-width: 600px;
-      margin: 100px auto;
+      margin-top: 100px;
       padding: 20px;
     }
 
     h1 {
-      font-size: 32px;
+      font-size: 36px;
       margin-bottom: 10px;
     }
 
     p {
-      color: #a0a8b8;
+      color: #ccc;
       margin-bottom: 30px;
     }
 
-    .box {
-      background: #111827;
+    /* Card */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
       padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
     }
 
     input {
       width: 100%;
       padding: 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
       margin-bottom: 15px;
-      background: #1f2937;
-      color: white;
+      font-size: 16px;
     }
 
     button {
       width: 100%;
       padding: 12px;
-      border: none;
-      border-radius: 6px;
-      background: #10b981;
+      background: #1db954;
       color: white;
+      border: none;
+      border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
     }
 
     button:hover {
-      background: #059669;
+      background: #17a74a;
     }
 
     #result {
       margin-top: 20px;
-      font-size: 15px;
-      text-align: left;
-    }
-
-    .header {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-weight: bold;
-      color: #10b981;
+      display: none;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 8px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="header">NRRSSA-E</div>
+  <!-- Background -->
+  <div class="bg-image"></div>
+  <div class="overlay"></div>
 
-<div class="container">
-  <h1>Certificate Verification</h1>
-  <p>Verify internship and training records issued under the NRRSSA-E initiative.</p>
+  <!-- Content -->
+  <div class="container">
+    <h1>Certificate Verification</h1>
+    <p>Verify internship and training records issued under the NRRSSA E Initiative.</p>
 
-  <div class="box">
-    <input type="text" id="certID" placeholder="e.g. NRRSSA-KAL-LX-2026-SD-001">
-    <button onclick="verify()">Verify Certificate</button>
+    <div class="card">
+      <input type="text" id="certId" placeholder="NRRSSA-XXXX-XXXX-XXX-XXX">
+      <button onclick="verify()">Verify Certificate</button>
 
-    <div id="result"></div>
+      <div id="result"></div>
+    </div>
   </div>
-</div>
 
-<script>
-function verify() {
-  var input = document.getElementById("certID").value.trim();
+  <script>
+    function verify() {
+      const id = document.getElementById("certId").value.trim();
+      const resultDiv = document.getElementById("result");
 
-  if (input === "NRRSSA-KAL-LX-2026-SD-001") {
-    document.getElementById("result").innerHTML =
-    "<b>Status:</b> Verified<br><br>" +
-    "<b>Name:</b> Avany Abhilash<br>" +
-    "<b>Division:</b> Structural Division<br>" +
-    "<b>Certificate ID:</b> NRRSSA-KAL-LX-2026-SD-001<br>" +
-    "<b>Issued Under:</b> NRRSSA-E Initiative";
-  } else {
-    document.getElementById("result").innerHTML =
-    "<span style='color:red;'>Invalid Certificate ID</span>";
-  }
-}
-</script>
+      if (!id) {
+        alert("Enter Certificate ID");
+        return;
+      }
+
+      // Dummy success for now
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = "<b>Verification Successful</b><br>Certificate ID: " + id;
+    }
+  </script>
 
 </body>
-    </html>
+</html>
