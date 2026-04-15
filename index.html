@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NRRSSA-E Verification</title>
+</head>
+<body style="font-family: Arial; text-align: center; margin-top: 50px;">
+
+  <h2>Certificate Verification</h2>
+
+  <input id="certId" placeholder="Enter Certificate ID" style="padding:10px; width:250px;">
+  <br><br>
+  <button onclick="verify()" style="padding:10px 20px;">Verify</button>
+
+  <p id="result" style="margin-top:20px; font-weight:bold;"></p>
+
+  <script>
+    function verify() {
+      const input = document.getElementById("certId").value;
+
+      if(input === "NRRSSA-KAL-LX-2026-SD-001") {
+        document.getElementById("result").innerHTML =
+          "Verified<br>Name: Avany Abhilash<br>Division: Structural Division<br>Program: Point Five-1 Prototype Program<br>Duration: Dec 18, 2025 - Apr 13, 2026";
+      } else {
+        document.getElementById("result").innerHTML =
+          "No record found";
+      }
+    }
+  </script>
+
+</body>
+</html>
