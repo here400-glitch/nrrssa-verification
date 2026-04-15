@@ -68,32 +68,48 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.verify = async function () {
-  const id = document.getElementById("certId").value.trim();
-
-  if (!id) {
-    alert("Enter Certificate ID");
-    return;
-  }
-
-  const docRef = doc(db, "Certificates", id);
-  const docSnap = await getDoc(docRef);
-
   const resultDiv = document.getElementById("result");
 
-  if (docSnap.exists()) {
-    const data = docSnap.data();
+  try {
+    const id = document.getElementById("certId").value.trim();
+
+    if (!id) {
+      alert("Enter Certificate ID");
+      return;
+    }
+
+    console.log("Searching:", id);
+
+    const docRef = doc(db, "Certificates", id);
+    const docSnap = await getDoc(docRef);
+
+    console.log("DocSnap:", docSnap);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      console.log("Data:", data);
+
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = `
+        <h3>Verification Successful</h3>
+        <p><b>Name:</b> ${data.name}</p>
+        <p><b>Division:</b> ${data.division}</p>
+        <p><b>Program:</b> ${data.program}</p>
+        <p><b>Duration:</b> ${data.duration}</p>
+      `;
+    } else {
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = `<p>Certificate not found</p>`;
+    }
+
+  } catch (error) {
+    console.error("ERROR:", error);
 
     resultDiv.style.display = "block";
     resultDiv.innerHTML = `
-      <h3>Verification Successful</h3>
-      <p><b>Name:</b> ${data.name}</p>
-      <p><b>Division:</b> ${data.division}</p>
-      <p><b>Program:</b> ${data.program}</p>
-      <p><b>Duration:</b> ${data.duration}</p>
+      <p style="color:red;">Error verifying certificate.</p>
+      <p style="font-size:12px;">Check console for details</p>
     `;
-  } else {
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = `<p>Certificate not found</p>`;
   }
 };
 
