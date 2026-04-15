@@ -1,119 +1,297 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Certificate Verification</title>
+  <title>NRRSSA-E Verification</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
-      font-family: Arial;
-      text-align: center;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 32px;
-    }
-
-    input, button {
-      width: 90%;
-      max-width: 400px;
-      padding: 12px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-
-    button {
-      background: black;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
       color: white;
-      border: none;
-      cursor: pointer;
+      overflow-x: hidden;
     }
 
-    .box {
-      background: white;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 8px;
+    /* Background image */
+    .bg {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: url('./bg.png') center/contain no-repeat;
+      opacity: 0.75;
+      z-index: -2;
+    }
+
+    /* Dark overlay */
+    .overlay {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.88);
+      z-index: -1;
+    }
+
+    /* NAV */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 22px 40px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .logo {
+      color: #00ffae;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-right {
+      opacity: 0.7;
+    }
+
+    /* TOP TITLE */
+    .top-title {
+      max-width: 900px;
+      margin: 40px auto 10px auto;
+      padding: 0 20px;
+    }
+
+    .top-title h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .top-title p {
+      color: #aaa;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .divider {
+      width: 90%;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 20px auto 0 auto;
+    }
+
+    /* CENTER HERO */
+    .hero {
+      text-align: center;
+      margin-top: 120px;
+      padding: 0 20px;
+    }
+
+    .hero h2 {
+      font-size: 38px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .hero .sub {
+      font-size: 20px;
+      color: #bbb;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #888;
+      max-width: 520px;
+      margin: auto;
+      font-size: 14px;
+    }
+
+    /* CARD */
+    .card {
+      margin: 60px auto;
+      max-width: 600px;
+      padding: 40px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,255,174,0.25);
+      box-shadow: 0 0 60px rgba(0,255,174,0.08);
+    }
+
+    .label {
+      font-size: 11px;
+      color: #aaa;
+      text-align: left;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* INPUT */
+    .input-box {
+      display: flex;
+      align-items: center;
+      background: rgba(0,50,30,0.4);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid rgba(0,255,174,0.2);
+      margin-bottom: 20px;
+    }
+
+    .input-box span {
+      margin-right: 10px;
+      opacity: 0.6;
+    }
+
+    .input-box input {
+      border: none;
+      background: transparent;
+      color: white;
+      width: 100%;
+      outline: none;
+      font-size: 14px;
+    }
+
+    /* BUTTON */
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #1f7a5a;
+      color: #d7fff0;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #1aa06f;
+    }
+
+    /* RESULT */
+    #result {
+      margin-top: 25px;
+      display: none;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,255,174,0.06);
+      border: 1px solid rgba(0,255,174,0.25);
+    }
+
+    .success {
+      color: #00ffae;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      margin-top: 80px;
+      padding-bottom: 30px;
+      letter-spacing: 1px;
     }
   </style>
 </head>
 
 <body>
 
-<h1>Certificate Verification</h1>
+<div class="bg"></div>
+<div class="overlay"></div>
 
-<input type="text" id="certId" placeholder="Enter Certificate ID">
-<br>
-<button onclick="verify()">Verify</button>
+<div class="nav">
+  <div class="logo">NRRSSA-E</div>
+  <div class="nav-right">Home &nbsp;&nbsp; Verify Certificate</div>
+</div>
 
-<div id="result" class="box" style="display:none;"></div>
+<div class="top-title">
+  <h1>Certificate Verification | NRRSSA-E</h1>
+  <p>Verify internship and training records issued under the NRRSSA-E initiative.</p>
+</div>
+
+<div class="divider"></div>
+
+<div class="hero">
+  <h2>Internship and Certificate Verification</h2>
+  <div class="sub">NRRSSA-E</div>
+  <p>
+    Verify internship and training records issued under the Next Reusable 
+    Single Stage Rocket Advancements initiative.
+  </p>
+</div>
+
+<div class="card">
+
+  <div class="label">ENTER CERTIFICATE ID</div>
+
+  <div class="input-box">
+    <span>🔍</span>
+    <input id="certId" placeholder="NRRSSA-KALLX-XXXX-XX-XXX">
+  </div>
+
+  <button onclick="verify()">Verify Record →</button>
+
+  <div id="result"></div>
+
+</div>
+
+<div class="footer">
+  THIS RECORD IS MAINTAINED BY THE NRRSSA-E INITIATIVE FOR VERIFICATION PURPOSES.
+</div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDb879CZIS39p0E5507iA7ZpKKgv3b0rCQ",
+  apiKey: "AIzaSyDb879CZS3gp0E5507ia7ZPKKgv3b0rCQ",
   authDomain: "nrrssa-e.firebaseapp.com",
   projectId: "nrrssa-e",
-  storageBucket: "nrrssa-e.firebasestorage.app",
-  messagingSenderId: "617591889409",
-  appId: "1:617591889409:web:35ab15426c4fbd94a3ea09"
+  storageBucket: "nrrssa-e.appspot.com",
+  messagingSenderId: "617591898409",
+  appId: "1:617591898409:web:35ab15426c4fbd94a3ea00"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.verify = async function () {
-  const resultDiv = document.getElementById("result");
+window.verify = async function() {
+  const id = document.getElementById("certId").value.trim();
+  const result = document.getElementById("result");
 
-  try {
-    const id = document.getElementById("certId").value.trim();
+  if (!id) {
+    result.style.display = "block";
+    result.innerHTML = "Enter Certificate ID";
+    return;
+  }
 
-    if (!id) {
-      alert("Enter Certificate ID");
-      return;
-    }
+  const snap = await getDoc(doc(db, "Certificates", id));
 
-    console.log("Searching:", id);
+  if (snap.exists()) {
+    const data = snap.data();
 
-    const docRef = doc(db, "Certificates", id);
-    const docSnap = await getDoc(docRef);
-
-    console.log("DocSnap:", docSnap);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      console.log("Data:", data);
-
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = `
-        <h3>Verification Successful</h3>
-        <p><b>Name:</b> ${data.name}</p>
-        <p><b>Division:</b> ${data.division}</p>
-        <p><b>Program:</b> ${data.program}</p>
-        <p><b>Duration:</b> ${data.duration}</p>
-      `;
-    } else {
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = `<p>Certificate not found</p>`;
-    }
-
-  } catch (error) {
-    console.error("ERROR:", error);
-
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = `
-      <p style="color:red;">Error verifying certificate.</p>
-      <p style="font-size:12px;">Check console for details</p>
+    result.style.display = "block";
+    result.innerHTML = `
+      <div class="success">✔ Verified by NRRSSA-E</div>
+      <div><b>Name:</b> ${data.name}</div>
+      <div><b>Division:</b> ${data.division}</div>
+      <div><b>Program:</b> ${data.program}</div>
+      <div><b>Duration:</b> ${data.duration}</div>
     `;
+  } else {
+    result.style.display = "block";
+    result.innerHTML = "Invalid Certificate";
   }
 };
 
+/* AUTO VERIFY */
+const params = new URLSearchParams(window.location.search);
+const cert = params.get("cert");
+
+if (cert) {
+  document.getElementById("certId").value = cert;
+  verify();
+}
 </script>
 
 </body>
-</html>
+</html> 
