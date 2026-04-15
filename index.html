@@ -25,11 +25,7 @@ body {
   text-align: center;
 }
 
-h1 {
-  margin-bottom: 10px;
-}
-
-input, button, textarea {
+input, button {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
@@ -41,10 +37,6 @@ button {
   background: black;
   color: white;
   cursor: pointer;
-}
-
-button:hover {
-  background: #333;
 }
 
 #formSection {
@@ -64,7 +56,7 @@ button:hover {
   <h1>Certificate Verification</h1>
   <p>Verify internship and training records issued under the NRRSSA - E initiative.</p>
 
-  <input type="text" id="certificateId" placeholder="NRRSSA - KALLX - XXXX - XX - XXX">
+  <input type="text" id="certificateId" placeholder="Enter Certificate ID">
   <button onclick="startVerification()">Verify</button>
 
   <div id="formSection">
@@ -78,7 +70,7 @@ button:hover {
 
     <button onclick="verifyCertificate()">Proceed to Verification</button>
 
-    <p style="font-size: 12px; margin-top: 10px;">
+    <p style="font-size: 12px;">
       The information provided will be used only for verification tracking and will not be shared externally.
     </p>
   </div>
@@ -91,36 +83,44 @@ let enteredId = "";
 
 function startVerification() {
   enteredId = document.getElementById("certificateId").value.trim();
+
   if (!enteredId) {
     alert("Please enter Certificate ID");
     return;
   }
+
   document.getElementById("formSection").style.display = "block";
 }
 
 async function verifyCertificate() {
-  const docRef = window.db.collection("Certificates").doc(enteredId);
-  const docSnap = await docRef.get();
-
   const resultDiv = document.getElementById("result");
 
-  if (docSnap.exists) {
-    const data = docSnap.data();
+  try {
+    const ref = window.firebaseDoc(window.dbInstance, "Certificates", enteredId);
+    const snap = await window.firebaseGetDoc(ref);
 
-    resultDiv.innerHTML = `
-      <h3>Verification Status: Verified</h3>
-      <p><strong>Name:</strong> ${data.name}</p>
-      <p><strong>Certificate ID:</strong> ${enteredId}</p>
-      <p><strong>Division:</strong> ${data.division}</p>
-      <p><strong>Program:</strong> ${data.program}</p>
-      <p><strong>Duration:</strong> ${data.duration}</p>
-      <p><strong>Issued under:</strong> NRRSSA - E Initiative</p>
-    `;
-  } else {
-    resultDiv.innerHTML = `
-      <p>No record found for this Certificate ID.<br>
-      Please check the ID or contact: your@email.com</p>
-    `;
+    if (snap.exists()) {
+      const data = snap.data();
+
+      resultDiv.innerHTML = `
+        <h3>Verification Status: Verified</h3>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Certificate ID:</strong> ${enteredId}</p>
+        <p><strong>Division:</strong> ${data.division}</p>
+        <p><strong>Program:</strong> ${data.program}</p>
+        <p><strong>Duration:</strong> ${data.duration}</p>
+        <p><strong>Issued under:</strong> NRRSSA - E Initiative</p>
+      `;
+    } else {
+      resultDiv.innerHTML = `
+        <p>No record found for this Certificate ID.<br>
+        Please check the ID or contact: your@email.com</p>
+      `;
+    }
+
+  } catch (error) {
+    console.error(error);
+    resultDiv.innerHTML = "Error verifying certificate.";
   }
 }
 </script>
@@ -142,20 +142,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.db = {
-  collection: (name) => ({
-    doc: (id) => ({
-      get: async () => {
-        const ref = doc(db, name, id);
-        const snap = await getDoc(ref);
-        return {
-          exists: snap.exists(),
-          data: () => snap.data()
-        };
-      }
-    })
-  })
-};
+window.dbInstance = db;
+window.firebaseDoc = doc;
+window.firebaseGetDoc = getDoc;
 </script>
 
 </body>
